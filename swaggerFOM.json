@@ -1,0 +1,4613 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Orchestrator",
+    "description": "Orchestration of the incoming Orders",
+    "contact": {
+      "name": "TIBCO SUPPORT",
+      "url": "https://support.tibco.com"
+    },
+    "license": {
+      "name": "Tibco-URL",
+      "url": "https://www.tibco.com"
+    },
+    "version": "6.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8090",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Order Apis"
+    },
+    {
+      "name": "Order Event Apis",
+      "description": "Apis to manage Order Events (Pending or Dead)"
+    },
+    {
+      "name": "Actuator",
+      "description": "Monitor and interact",
+      "externalDocs": {
+        "description": "Spring Boot Actuator Web API Documentation",
+        "url": "https://docs.spring.io/spring-boot/docs/current/actuator-api/html/"
+      }
+    },
+    {
+      "name": "Read Plan Fragment Cache"
+    },
+    {
+      "name": "Plan Item Apis"
+    },
+    {
+      "name": "Plan Apis"
+    }
+  ],
+  "paths": {
+    "/v1/triggerPendingOrder/orderIDs": {
+      "post": {
+        "tags": [
+          "Order Event Apis"
+        ],
+        "summary": "Operation Trigger Pending Order By Order Id List",
+        "description": "Deprecated in favor of /v1/order/pending",
+        "operationId": "triggerPendingOrderByOrderIds",
+        "parameters": [
+          {
+            "name": "orderIds",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Triggered all requested PendingOrder"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "Provided order ids are not present in Pending orders"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": true,
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order/pending": {
+      "get": {
+        "tags": [
+          "Order Event Apis"
+        ],
+        "summary": "Operation Fetch Pending Orders By Order Id",
+        "description": "get details of dead order events for any orderId",
+        "operationId": "fetchPendingOrderByOrderId",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "order identification number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details for the dead order events for order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PendingOrderEventResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "Order Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Order Event Apis"
+        ],
+        "summary": "Operation Trigger Pending Order By Order Id List",
+        "operationId": "triggerPendingOrderByOrderIds_1",
+        "parameters": [
+          {
+            "name": "orderIds",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Triggered all requested PendingOrder"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "Provided order ids are not present in Pending orders"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/triggerDeadOrder/orderIDs": {
+      "post": {
+        "tags": [
+          "Order Event Apis"
+        ],
+        "summary": "Operation Trigger Dead Order By Order Id List",
+        "description": "Deprecated in favor of /v1/order/dead",
+        "operationId": "triggerDeadOrderByOrderIds",
+        "parameters": [
+          {
+            "name": "orderIdList",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Triggered all requested DeadOrder"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "Provided order ids are not present in dead orders"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": true,
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order/dead": {
+      "get": {
+        "tags": [
+          "Order Event Apis"
+        ],
+        "summary": "Operation Fetch Dead Orders By Order Id",
+        "description": "get details of dead order events for any orderId",
+        "operationId": "fetchDeadOrdersByOrderId",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "order identification number",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details for the dead order events for order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeadOrderEventResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "Order Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Order Event Apis"
+        ],
+        "summary": "Operation Trigger Dead Order By Order Id List",
+        "operationId": "triggerDeadOrderByOrderIds_1",
+        "parameters": [
+          {
+            "name": "orderIdList",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Triggered all requested DeadOrder"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "Provided order ids are not present in dead orders"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/triggerDeadOrder": {
+      "post": {
+        "tags": [
+          "Order Event Apis"
+        ],
+        "summary": "Operation Trigger All Dead Order Events",
+        "description": "Deprecated in favor of /v1/order/dead/all",
+        "operationId": "triggerAllDeadOrder",
+        "responses": {
+          "200": {
+            "description": "Triggered all DeadOrder"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "No dead orders are present"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": true,
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order/dead/all": {
+      "post": {
+        "tags": [
+          "Order Event Apis"
+        ],
+        "summary": "Operation Trigger All Dead Order Events",
+        "operationId": "triggerAllDeadOrder_1",
+        "responses": {
+          "200": {
+            "description": "Triggered all DeadOrder"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "No dead orders are present"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/preQualificationFailedReply": {
+      "post": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation PreQualificationFailedReply",
+        "description": "Deprecated in favor of /v1/order/preQualificationFailedReply",
+        "operationId": "preQualificationFailedReply",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreQualificationFailedReply"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "- preQualificationFailedReply is processed for {}"
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed\n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order not found for orderID [{0}]"
+          },
+          "500": {
+            "description": "- Internal Server Error "
+          }
+        },
+        "deprecated": true,
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order/preQualificationFailedReply": {
+      "post": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation PreQualificationFailedReply",
+        "operationId": "preQualificationFailedReply_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreQualificationFailedReply"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "- preQualificationFailedReply is processed for {}"
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed\n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order not found for orderID [{0}]"
+          },
+          "500": {
+            "description": "- Internal Server Error "
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/planitem/suspendreply": {
+      "post": {
+        "tags": [
+          "Plan Item Apis"
+        ],
+        "summary": "Operation PlanItemSuspendReply",
+        "description": "initiate plan-item suspend reply",
+        "operationId": "planItemSuspendReply",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanItemSuspendReply"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/planitem/milestonenotify": {
+      "post": {
+        "tags": [
+          "Plan Item Apis"
+        ],
+        "summary": "Operation MilestoneNotify",
+        "operationId": "milestoneNotifyRequest",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MilestoneNotifyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/planitem/executionreply": {
+      "post": {
+        "tags": [
+          "Plan Item Apis"
+        ],
+        "summary": "Operation PlanItemExecuteReply",
+        "description": "initiate plan-item execute reply",
+        "operationId": "planItemExecuteReply",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanItemExecuteResponse"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/planitem/errorHandlerreply": {
+      "post": {
+        "tags": [
+          "Plan Item Apis"
+        ],
+        "summary": "Operation PlanItemErrorHandlerReply",
+        "description": "initiate plan-item execute reply",
+        "operationId": "planItemErrorHandlerReply",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanItemFailedReply"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "406": {
+            "description": "Not Accepted"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/planitem/bulkErrorHandlerreply": {
+      "post": {
+        "tags": [
+          "Plan Item Apis"
+        ],
+        "summary": "Operation PlanItemBulkErrorHandlerReply",
+        "operationId": "planItemBulkErrorHandlerReply",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/PlanItemFailedReply"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Accepted"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/plan": {
+      "get": {
+        "tags": [
+          "Plan Apis"
+        ],
+        "summary": "Operation GetOrderExecutionPlan",
+        "description": "get details of the particular plan of an order.",
+        "operationId": "getOrderExecutionPlan",
+        "parameters": [
+          {
+            "name": "orderRef",
+            "in": "query",
+            "description": "order reference number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "order identification number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "planId",
+            "in": "query",
+            "description": "plan identification number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "externalBusinessTransactionId",
+            "in": "query",
+            "description": "external business transaction identification number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details of the Plan for an Order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderExecutionPlanResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Plan Apis"
+        ],
+        "summary": "Operation SubmitOrderExecutionPlan",
+        "description": "Submit Order Execution Plan",
+        "operationId": "orderExecutionPlan",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AopdPlan"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Plan is submitted successfully"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/plan/error": {
+      "post": {
+        "tags": [
+          "Plan Apis"
+        ],
+        "summary": "Operation submitPlanErrorNotification",
+        "description": "Submit Plan Error Notification",
+        "operationId": "planErrorNotification",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AopdPlanErrorNotification"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Plan error notification is submitted successfully"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order": {
+      "get": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation GetOrderDetails",
+        "description": "get details of the particular order based on orderRef and optionally include order request and order amendments as part of response",
+        "operationId": "getOrderDetails",
+        "parameters": [
+          {
+            "name": "orderRef",
+            "in": "query",
+            "description": "order reference number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "order identification number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "externalBusinessTransactionId",
+            "in": "query",
+            "description": "external business transaction identification number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeOrderRequest",
+            "in": "query",
+            "description": "include order request in response",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "includeAmendment",
+            "in": "query",
+            "description": "include order amendment in response",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "- Details for the Order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderDetailsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order not found for orderID [{0}]"
+          },
+          "500": {
+            "description": "- Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation SubmitOrder",
+        "operationId": "submitOrder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitOrderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "- Details for the Order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubmitOrderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": " - Order with orderRef [{0}] and orderId [{1}] already exist \n- OrderID [{0}] and OrderRef [{1}] cannot be different \n- Both RequiredByDate and RequiredOnDate cannot be present \n- DUPLICATE_ORDER_LINE \n- JSON parse error \n- Both orderID and orderRef is null or empty \n- Both customerId and subscriberId cannot present"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "500": {
+            "description": "- Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation WithdrawOrder",
+        "operationId": "withdrawOrderRequest",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WithdrawOrderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "- Details for the Order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WithdrawOrderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order not found for orderID [{0}]"
+          },
+          "500": {
+            "description": "- Internal Server Error \n- Unable to acquire lock. Event is saved and will be processed later."
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order/suspend": {
+      "post": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation SuspendOrder",
+        "operationId": "suspendOrderRequest",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuspendOrderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "- Details for the Suspended Order \n- Order with order id {}, order ref {} and tenantId {} is suspended successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SuspendOrderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order not found for orderID [{0}]"
+          },
+          "406": {
+            "description": "- Not Accepted"
+          },
+          "500": {
+            "description": "- Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order/cancel": {
+      "post": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation CancelOrder",
+        "operationId": "CancelOrder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelOrderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "- Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelOrderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order not found for orderID [{0}]"
+          },
+          "406": {
+            "description": "- Not Accepted"
+          },
+          "500": {
+            "description": "- Internal Server Error \n- Unable to acquire lock. Event is saved and will be processed later."
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order/bulkaction": {
+      "post": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation BulkAction",
+        "operationId": "BulkAction",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PerformBulkOrderActionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "- OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PerformBulkOrderActionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "- No OrderID and OrderRef present"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order/audit": {
+      "get": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation Get Audit Trail.",
+        "description": "get audit-trail for order,orderlines and optionally also for plan, plan-items.",
+        "operationId": "getAuditTrail_2",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "order identification number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderRef",
+            "in": "query",
+            "description": "order reference number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includePlan",
+            "in": "query",
+            "description": "include audit trail for plan.",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "includePlanItem",
+            "in": "query",
+            "description": "include audit trail for plan-items.",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "sortByTime",
+            "in": "query",
+            "description": "sort by time",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "- Audit trail for orderID::{}, orderRef::{} and tenantID::{}",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAuditTrailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order not found for orderID [{0}] \n- Audit trail not found for orderID"
+          },
+          "500": {
+            "description": "- Internal Server Error"
+          }
+        },
+        "deprecated": true,
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation submit Audit Trail.",
+        "description": "submit audit-trail for order,orderlines and optionally also for plan, plan-items.",
+        "operationId": "submitAuditTrail",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuditTrailRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "- Created"
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order not found for orderID [{0}] \n- Audit trail not found for orderID"
+          },
+          "500": {
+            "description": "- Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order/activate": {
+      "post": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation ActivateOrder",
+        "operationId": "activateOrderRequest",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivateOrderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "- Accepted \n- Order with order id {}, order ref {} and tenantId {} is activated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ActivateOrderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Invalid orderRef [{}] .\n- Order not found with given ID "
+          },
+          "406": {
+            "description": "- Not Accepted"
+          },
+          "500": {
+            "description": "- Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/feasibilityReply": {
+      "post": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation FeasibilityReply",
+        "description": "Deprecated in favor of /v1/order/feasibilityReply",
+        "operationId": "feasibilityReply",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeasibilityReply"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "- Success \n- FeasibilityReply is processed"
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order not found for orderID [{0}]"
+          },
+          "406": {
+            "description": "- Not Accepted"
+          },
+          "500": {
+            "description": "- Internal Server Error"
+          }
+        },
+        "deprecated": true,
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order/feasibilityReply": {
+      "post": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation FeasibilityReply",
+        "operationId": "feasibilityReply_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeasibilityReply"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "- Success \n- FeasibilityReply is processed"
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order not found for orderID [{0}]"
+          },
+          "406": {
+            "description": "- Not Accepted"
+          },
+          "500": {
+            "description": "- Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/amend": {
+      "post": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation AmendOrder",
+        "description": "Deprecated in favor of /v1/order/amend",
+        "operationId": "amendOrder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AmendOrderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "- Details for the Order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AmendOrderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty \n- Both RequiredByDate and RequiredOnDate cannot be present \n- DUPLICATE_ORDER_LINE \n- JSON parse error \n- Multiple changes detected for line [{0}]. [{1}] and [{2}] are changed \n- Invalid amendment detected at header. [{0}] change not allowed \n"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order Not found for orderID [{0}]"
+          },
+          "500": {
+            "description": "- Internal Server Error \n- Unable to acquire lock. Event is saved and will be processed later."
+          }
+        },
+        "deprecated": true,
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order/amend": {
+      "post": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation AmendOrder",
+        "operationId": "amendOrder_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AmendOrderRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "- Details for the Order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AmendOrderResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty \n- Both RequiredByDate and RequiredOnDate cannot be present \n- DUPLICATE_ORDER_LINE \n- JSON parse error \n- Multiple changes detected for line [{0}]. [{1}] and [{2}] are changed \n- Invalid amendment detected at header. [{0}] change not allowed \n"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order Not found for orderID [{0}]"
+          },
+          "500": {
+            "description": "- Internal Server Error \n- Unable to acquire lock. Event is saved and will be processed later."
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/management/refresh": {
+      "post": {
+        "tags": [
+          "Actuator"
+        ],
+        "summary": "Actuator web endpoint 'refresh'",
+        "operationId": "refresh",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/management/loggers/{name}": {
+      "get": {
+        "tags": [
+          "Actuator"
+        ],
+        "summary": "Actuator web endpoint 'loggers-name'",
+        "operationId": "loggers-name_2",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Actuator"
+        ],
+        "summary": "Actuator web endpoint 'loggers-name'",
+        "operationId": "loggers-name",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLogLevelRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v2/order/audit": {
+      "get": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation Get Audit Trail.",
+        "description": "get audit-trail for order,orderlines and optionally also for plan, plan-items.",
+        "operationId": "getAuditTrail",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "order identification number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderRef",
+            "in": "query",
+            "description": "order reference number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includePlan",
+            "in": "query",
+            "description": "include audit trail for plan.",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "includePlanItem",
+            "in": "query",
+            "description": "include audit trail for plan-items.",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "sortByTime",
+            "in": "query",
+            "description": "sort by time",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "- Audit trail for orderID::{}, orderRef::{} and tenantID::{}",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAuditTrailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order not found for orderID [{0}] \n- Audit trail not found for orderID"
+          },
+          "500": {
+            "description": "- Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order/status": {
+      "get": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation GetOrderStatus",
+        "operationId": "OrderStatus",
+        "parameters": [
+          {
+            "name": "orderIdList",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderStatusResponse"
+                }
+              }
+            }
+          },
+          "206": {
+            "description": "Partial Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderStatusResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order/scxml": {
+      "get": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation Get Order State Machine XML",
+        "operationId": "getOrderScXml",
+        "parameters": [
+          {
+            "name": "orderRef",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "- Details for the order scxml",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SCXMLPersistentState"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order not found for orderID [{0}]"
+          },
+          "500": {
+            "description": "- Internal Server Error "
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order/plan": {
+      "get": {
+        "tags": [
+          "Plan Apis"
+        ],
+        "summary": "Operation GetOrderExecutionPlan",
+        "description": "Deprecated in favor of /v1/plan",
+        "operationId": "getOrderExecutionPlan_1",
+        "parameters": [
+          {
+            "name": "orderRef",
+            "in": "query",
+            "description": "order reference number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "order identification number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "externalBusinessTransactionId",
+            "in": "query",
+            "description": "external business transaction identification number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Details of the Plan for an Order",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetOrderExecutionPlanResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "deprecated": true,
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/order/messages": {
+      "get": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation GetOrderMessages",
+        "operationId": "OrderMessages",
+        "parameters": [
+          {
+            "name": "orderRef",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "- Details for the OrderMessages",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetMessageResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order not found for orderID [{0}]"
+          },
+          "406": {
+            "description": "- Not Accepted"
+          },
+          "500": {
+            "description": "- Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/v1/audit": {
+      "get": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation Get Audit Trail.",
+        "description": "Deprecated in favor of /v1/order/audit",
+        "operationId": "getAuditTrail_1",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "query",
+            "description": "order identification number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderRef",
+            "in": "query",
+            "description": "order reference number",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "includePlan",
+            "in": "query",
+            "description": "include audit trail for plan.",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "includePlanItem",
+            "in": "query",
+            "description": "include audit trail for plan-items.",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          },
+          {
+            "name": "sortByTime",
+            "in": "query",
+            "description": "sort by time",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "- Audit trail for orderID::{}, orderRef::{} and tenantID::{}",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetAuditTrailResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "404": {
+            "description": "- Order not found for orderID [{0}] \n- Audit trail not found for orderID"
+          },
+          "500": {
+            "description": "- Internal Server Error"
+          }
+        },
+        "deprecated": true,
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/planFragment": {
+      "get": {
+        "tags": [
+          "Read Plan Fragment Cache"
+        ],
+        "summary": "Operation getplanfragment",
+        "description": "This api used to get all plan fragment.",
+        "operationId": "planFragments",
+        "parameters": [
+          {
+            "name": "planFragmentIdList",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "206": {
+            "description": "Partial content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/management": {
+      "get": {
+        "tags": [
+          "Actuator"
+        ],
+        "summary": "Actuator root web endpoint",
+        "operationId": "links",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "$ref": "#/components/schemas/Link"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/management/loggers": {
+      "get": {
+        "tags": [
+          "Actuator"
+        ],
+        "summary": "Actuator web endpoint 'loggers'",
+        "operationId": "loggers",
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/management/health": {
+      "get": {
+        "tags": [
+          "Actuator"
+        ],
+        "summary": "Actuator web endpoint 'health'",
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/order/purgeOrder": {
+      "delete": {
+        "tags": [
+          "Order Apis"
+        ],
+        "summary": "Operation Purge Order",
+        "operationId": "purgeOrder",
+        "parameters": [
+          {
+            "name": "orderid",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "- Order with order id {} and tenantId {} is purged successfully"
+          },
+          "400": {
+            "description": "- Both orderID and orderRef is null or empty"
+          },
+          "401": {
+            "description": "- User with [{0}] are not allowed \n- Unauthorized Request"
+          },
+          "403": {
+            "description": "- Forbidden \n- Order is in %s state. Purging is allowed only for orders in final state"
+          },
+          "404": {
+            "description": "- Order not found for orderID [{0}]"
+          },
+          "500": {
+            "description": "- Internal Server Error "
+          }
+        },
+        "security": [
+          {
+            "OAuth Password": []
+          }
+        ]
+      }
+    },
+    "/management/health/{name}": {
+      "get": {
+        "tags": [
+          "Actuator"
+        ],
+        "summary": "Actuator web endpoint 'health-path'",
+        "operationId": "health-path",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "enum": [
+                "readiness",
+                "liveness"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Message": {
+        "required": [
+          "code",
+          "description",
+          "type",
+          "udfs"
+        ],
+        "type": "object",
+        "properties": {
+          "lineNumber": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "udfs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MessageUdfs"
+            }
+          }
+        },
+        "xml": {
+          "name": "message"
+        }
+      },
+      "MessageUdfs": {
+        "required": [
+          "name",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "PreQualificationFailedReply": {
+        "required": [
+          "orderID",
+          "orderRef"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "array",
+            "xml": {
+              "namespace": "http://www.tibco.com/AFF/V4.0.0/applications/orchestrator/message"
+            },
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "orderID": {
+            "type": "string"
+          },
+          "orderRef": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string",
+            "description": "example",
+            "example": "RETRYOPD",
+            "enum": [
+              "RETRYFEASIBILITY",
+              "RETRYOPD",
+              "WITHDRAW",
+              "RETRYFEASIBILITY",
+              "RETRYOPD",
+              "WITHDRAW"
+            ]
+          },
+          "businessTransactionID": {
+            "type": "string"
+          },
+          "correlationID": {
+            "type": "string"
+          }
+        }
+      },
+      "PlanItemSuspendReply": {
+        "required": [
+          "planItemID",
+          "resultStatus"
+        ],
+        "type": "object",
+        "properties": {
+          "resultStatus": {
+            "$ref": "#/components/schemas/ResultStatus"
+          },
+          "orderID": {
+            "type": "string"
+          },
+          "orderRef": {
+            "type": "string"
+          },
+          "planID": {
+            "type": "string"
+          },
+          "planItemID": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "businessTransactionID": {
+            "type": "string"
+          },
+          "correlationID": {
+            "type": "string"
+          }
+        }
+      },
+      "ResultStatus": {
+        "required": [
+          "code",
+          "deployment",
+          "message",
+          "operation",
+          "service",
+          "severity"
+        ],
+        "type": "object",
+        "properties": {
+          "deployment": {
+            "type": "string"
+          },
+          "service": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "string"
+          },
+          "component": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "MilestoneNotifyRequest": {
+        "required": [
+          "milestoneID",
+          "planItemID"
+        ],
+        "type": "object",
+        "properties": {
+          "orderID": {
+            "type": "string"
+          },
+          "orderRef": {
+            "type": "string"
+          },
+          "planID": {
+            "type": "string"
+          },
+          "planItemID": {
+            "type": "string"
+          },
+          "milestoneID": {
+            "type": "string"
+          },
+          "businessTransactionID": {
+            "type": "string",
+            "xml": {
+              "attribute": true
+            }
+          }
+        },
+        "xml": {
+          "name": "MilestoneNotifyRequest"
+        }
+      },
+      "PlanItemExecuteResponse": {
+        "required": [
+          "orderRef",
+          "planItemId"
+        ],
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "array",
+            "xml": {
+              "namespace": "http://www.tibco.com/AFF/V4.0.0/applications/orchestrator/message"
+            },
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "orderId": {
+            "type": "string",
+            "xml": {
+              "name": "orderID"
+            }
+          },
+          "orderRef": {
+            "type": "string"
+          },
+          "planId": {
+            "type": "string",
+            "xml": {
+              "name": "planID"
+            }
+          },
+          "planItemId": {
+            "type": "string",
+            "xml": {
+              "name": "planItemID"
+            }
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "cancelled": {
+            "type": "boolean"
+          },
+          "businessTransactionId": {
+            "type": "string",
+            "xml": {
+              "name": "businessTransactionID",
+              "attribute": true
+            }
+          }
+        },
+        "xml": {
+          "name": "PlanItemExecuteReply"
+        }
+      },
+      "PlanItemFailedReply": {
+        "required": [
+          "orderID",
+          "orderRef",
+          "planID",
+          "planItemID"
+        ],
+        "type": "object",
+        "properties": {
+          "orderID": {
+            "type": "string"
+          },
+          "orderRef": {
+            "type": "string"
+          },
+          "planID": {
+            "type": "string"
+          },
+          "planItemID": {
+            "type": "string"
+          },
+          "message": {
+            "type": "array",
+            "xml": {
+              "namespace": "http://www.tibco.com/AFF/V4.0.0/applications/orchestrator/message"
+            },
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "action": {
+            "type": "string",
+            "description": "example",
+            "example": "RESUME",
+            "enum": [
+              "RETRY",
+              "RESUME",
+              "COMPLETE"
+            ]
+          },
+          "businessTransactionId": {
+            "type": "string"
+          }
+        }
+      },
+      "AopdPlan": {
+        "required": [
+          "originator",
+          "planCreationDate",
+          "planId",
+          "planItems",
+          "status",
+          "statusChanged"
+        ],
+        "type": "object",
+        "properties": {
+          "planId": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string"
+          },
+          "orderRef": {
+            "type": "string"
+          },
+          "originator": {
+            "type": "string"
+          },
+          "planCreationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string"
+          },
+          "statusChanged": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "description": {
+            "type": "string"
+          },
+          "planStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "planStartMillis": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "isAmendment": {
+            "type": "boolean"
+          },
+          "planItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlanItem"
+            }
+          },
+          "udves": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Udf"
+            }
+          }
+        }
+      },
+      "Dependency": {
+        "required": [
+          "dependencyID",
+          "external",
+          "point",
+          "ready",
+          "status",
+          "statusChanged",
+          "time"
+        ],
+        "type": "object",
+        "properties": {
+          "dependencyID": {
+            "type": "string",
+            "default": "Unique identifier for this dependency."
+          },
+          "type": {
+            "type": "string",
+            "default": "Type of dependency."
+          },
+          "ready": {
+            "type": "boolean",
+            "default": false
+          },
+          "readyTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "default": "Status of the dependency."
+          },
+          "statusChanged": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "timeDelta": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "external": {
+            "$ref": "#/components/schemas/DependencyExternal"
+          },
+          "point": {
+            "$ref": "#/components/schemas/DependencyPoint"
+          },
+          "time": {
+            "$ref": "#/components/schemas/DependencyTime"
+          }
+        },
+        "description": "Dependency type."
+      },
+      "DependencyExternal": {
+        "required": [
+          "eventId",
+          "eventName"
+        ],
+        "type": "object",
+        "properties": {
+          "eventName": {
+            "type": "string",
+            "default": "Name of the external event that satisfies            this dependency."
+          },
+          "eventId": {
+            "type": "string",
+            "default": "Unique identifier of the external event that            satisfies this dependency."
+          },
+          "eventTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "description": "Warning: CHOICE element"
+      },
+      "DependencyPoint": {
+        "required": [
+          "end",
+          "milestoneID",
+          "planItemID"
+        ],
+        "type": "object",
+        "properties": {
+          "planItemID": {
+            "type": "string",
+            "default": "The plan item Id that uniquely identifies the            plan item that must reach a milestone for this dependency to            be satisfied."
+          },
+          "planID": {
+            "type": "string",
+            "default": "The plan Id for the plan item Id that            uniquely identifies the plan item that must reach a milestone            for this dependency to be satisfied. If omitted then the            current plan is assumed."
+          },
+          "milestoneID": {
+            "type": "string",
+            "default": "Warning: CHOICE element"
+          },
+          "end": {
+            "type": "object",
+            "default": "Warning: CHOICE element"
+          }
+        },
+        "description": "Warning: CHOICE element"
+      },
+      "DependencyTime": {
+        "type": "object",
+        "properties": {
+          "absoluteTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "description": "Warning: CHOICE element"
+      },
+      "PlanFragment": {
+        "required": [
+          "errorHandler",
+          "planFragmentID",
+          "planFragmentName",
+          "retry"
+        ],
+        "type": "object",
+        "properties": {
+          "acknowledgeMode": {
+            "type": "string",
+            "example": "REST, MESSAGING"
+          },
+          "planFragmentID": {
+            "type": "string"
+          },
+          "planFragmentName": {
+            "type": "string"
+          },
+          "planFragmentVersion": {
+            "type": "string"
+          },
+          "owner": {
+            "type": "string"
+          },
+          "record_Type": {
+            "type": "string"
+          },
+          "errorHandler": {
+            "type": "string"
+          },
+          "retry": {
+            "$ref": "#/components/schemas/PlanFragmentModelRetry"
+          },
+          "section": {
+            "maxItems": 2147483647,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Section"
+            }
+          }
+        }
+      },
+      "PlanFragmentModelRetry": {
+        "required": [
+          "retryCount",
+          "retryDelay",
+          "retryFailed",
+          "retryOverride"
+        ],
+        "type": "object",
+        "properties": {
+          "retryOverride": {
+            "type": "boolean"
+          },
+          "retryFailed": {
+            "type": "boolean"
+          },
+          "retryCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "retryDelay": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PlanItem": {
+        "required": [
+          "action",
+          "planFragmentUniqueId",
+          "planItemID",
+          "status",
+          "statusChanged"
+        ],
+        "type": "object",
+        "properties": {
+          "planItemMessages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlanItemMessages"
+            }
+          },
+          "planItemID": {
+            "type": "string",
+            "default": "Unique identifier for the plan item within the        plan."
+          },
+          "planItemName": {
+            "type": "string",
+            "default": "Identifier for the plan item name(Product        Description) within the plan."
+          },
+          "description": {
+            "type": "string",
+            "default": "Description for the plan item."
+          },
+          "planFragmentUniqueId": {
+            "type": "string",
+            "default": "The id of the process component to invoke when        executing the plan item."
+          },
+          "parentIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "default": "Plan Item Ids which are dependent on this plan item"
+            },
+            "default": "Plan Item Ids which are dependent on this plan item"
+          },
+          "childIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "default": "Plan Item Ids on which this plan item depends"
+            },
+            "default": "Plan Item Ids on which this plan item depends"
+          },
+          "siblingIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "default": "Plan Item Ids of sibling products for this plan        item"
+            },
+            "default": "Plan Item Ids of sibling products for this plan        item"
+          },
+          "dependentIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "default": "Plan Item Ids of dependent products for this plan        item"
+            },
+            "default": "Plan Item Ids of dependent products for this plan        item"
+          },
+          "startTimestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "endTimestamp": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "cancelled": {
+            "type": "boolean"
+          },
+          "isNonExecuting": {
+            "type": "boolean"
+          },
+          "isNoReciprocalAction": {
+            "type": "boolean"
+          },
+          "udfs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Udf"
+            }
+          },
+          "planFragment": {
+            "$ref": "#/components/schemas/PlanFragment"
+          },
+          "orderLines": {
+            "maxItems": 2147483647,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlanItemOrderLine"
+            },
+            "default": "A list of order lines for this plan item."
+          },
+          "action": {
+            "type": "string",
+            "default": "Action for the plan item."
+          },
+          "status": {
+            "type": "string",
+            "default": "Status for the plan item."
+          },
+          "statusChanged": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pcRequestType": {
+            "type": "string",
+            "default": "Type of request that was send to the process component."
+          },
+          "milestones": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlanItemMilestone"
+            }
+          }
+        },
+        "description": "Plan item type.; milestone: Intermediate milestone for the plan item."
+      },
+      "PlanItemMessages": {
+        "type": "object",
+        "properties": {
+          "planItemId": {
+            "type": "string"
+          },
+          "messageType": {
+            "type": "string"
+          },
+          "messageList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          }
+        }
+      },
+      "PlanItemMilestone": {
+        "required": [
+          "milestoneID",
+          "ready",
+          "status",
+          "statusChanged"
+        ],
+        "type": "object",
+        "properties": {
+          "milestoneID": {
+            "type": "string",
+            "default": "Unique identifier for this milestone within the        plan item and plan."
+          },
+          "description": {
+            "type": "string",
+            "default": "Description of the milestone."
+          },
+          "ready": {
+            "type": "boolean",
+            "default": false
+          },
+          "readyTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "default": "Status for the milestone."
+          },
+          "statusChanged": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Dependency"
+            }
+          }
+        },
+        "description": "Milestone type; dependency: Dependency for this milestone before it can be        made ready."
+      },
+      "PlanItemOrderLine": {
+        "required": [
+          "eol",
+          "orderLineNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "orderLineNumber": {
+            "type": "string",
+            "default": "Order line number for the order line           associated with the plan item."
+          },
+          "eol": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "default": "A list of order lines for this plan item."
+      },
+      "Section": {
+        "required": [
+          "endMilestoneID",
+          "startMilestoneID"
+        ],
+        "type": "object",
+        "properties": {
+          "startMilestoneID": {
+            "type": "string"
+          },
+          "endMilestoneID": {
+            "type": "string"
+          },
+          "typicalDuration": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "maximumDuration": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "Udf": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "evaluationPriority": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "flavor": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "originalValue": {
+            "type": "string"
+          }
+        }
+      },
+      "AopdPlanErrorNotification": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string"
+          },
+          "orderRef": {
+            "type": "string"
+          },
+          "errorReason": {
+            "type": "string"
+          },
+          "errorCode": {
+            "type": "string"
+          },
+          "orderLineInvalidProductMap": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "AddressType": {
+        "required": [
+          "country",
+          "line1",
+          "locality",
+          "postCode"
+        ],
+        "type": "object",
+        "properties": {
+          "line1": {
+            "type": "string"
+          },
+          "line2": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "line3": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "locality": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "postCode": {
+            "type": "string"
+          },
+          "supplementaryLocation": {
+            "type": "string"
+          }
+        }
+      },
+      "ExtensionType": {
+        "type": "object",
+        "properties": {
+          "any": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "HeaderRequest": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "orderPriority": {
+            "maximum": 9,
+            "exclusiveMaximum": false,
+            "minimum": 0,
+            "exclusiveMinimum": false,
+            "type": "number"
+          },
+          "invoiceAddress": {
+            "$ref": "#/components/schemas/AddressType"
+          },
+          "deliveryAddress": {
+            "$ref": "#/components/schemas/AddressType"
+          },
+          "notes": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "slaID": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "udf": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderUdf"
+            }
+          },
+          "extension": {
+            "$ref": "#/components/schemas/ExtensionType"
+          },
+          "customerID": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string"
+          },
+          "subscriberID": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string"
+          },
+          "requiredByDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "requiredOnDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "LineRequest": {
+        "required": [
+          "action",
+          "lineNumber",
+          "productID",
+          "quantity",
+          "uom"
+        ],
+        "type": "object",
+        "properties": {
+          "lineNumber": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string"
+          },
+          "subscriberID": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string"
+          },
+          "productID": {
+            "type": "string"
+          },
+          "productVersion": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "uom": {
+            "maxLength": 45,
+            "minLength": 0,
+            "type": "string"
+          },
+          "deliveryAddress": {
+            "$ref": "#/components/schemas/AddressType"
+          },
+          "action": {
+            "type": "string"
+          },
+          "actionMode": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string"
+          },
+          "linkID": {
+            "maxLength": 45,
+            "minLength": 0,
+            "type": "string"
+          },
+          "inventoryID": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "notes": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "slaID": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "udf": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderUdf"
+            }
+          },
+          "characteristic": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderCharacteristic"
+            }
+          },
+          "customerItemID": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string"
+          },
+          "extension": {
+            "$ref": "#/components/schemas/ExtensionType"
+          },
+          "requiredByDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "requiredOnDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OrderCharacteristic": {
+        "required": [
+          "description",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 45,
+            "minLength": 0,
+            "type": "string"
+          },
+          "description": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string"
+          },
+          "value": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderCharacteristicValues"
+            }
+          },
+          "extension": {
+            "$ref": "#/components/schemas/ExtensionType"
+          }
+        }
+      },
+      "OrderCharacteristicValues": {
+        "required": [
+          "name",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 45,
+            "minLength": 0,
+            "type": "string"
+          },
+          "type": {
+            "maxLength": 45,
+            "minLength": 0,
+            "type": "string"
+          },
+          "value": {
+            "maxLength": 45,
+            "minLength": 0,
+            "type": "string"
+          },
+          "valueFrom": {
+            "maxLength": 19,
+            "minLength": 0,
+            "type": "string"
+          },
+          "valueTo": {
+            "maxLength": 19,
+            "minLength": 0,
+            "type": "string"
+          },
+          "extension": {
+            "$ref": "#/components/schemas/ExtensionType"
+          }
+        }
+      },
+      "OrderRequest": {
+        "required": [
+          "header",
+          "orderID",
+          "orderRef"
+        ],
+        "type": "object",
+        "properties": {
+          "orderRef": {
+            "maxLength": 125,
+            "minLength": 0,
+            "type": "string"
+          },
+          "orderID": {
+            "maxLength": 125,
+            "minLength": 0,
+            "type": "string"
+          },
+          "header": {
+            "$ref": "#/components/schemas/HeaderRequest"
+          },
+          "line": {
+            "maxItems": 2147483647,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LineRequest"
+            }
+          },
+          "extension": {
+            "$ref": "#/components/schemas/ExtensionType"
+          }
+        }
+      },
+      "OrderUdf": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "extension": {
+            "$ref": "#/components/schemas/ExtensionType"
+          }
+        },
+        "xml": {
+          "name": "udf"
+        }
+      },
+      "SubmitOrderRequest": {
+        "required": [
+          "orderRequest"
+        ],
+        "type": "object",
+        "properties": {
+          "orderRequest": {
+            "$ref": "#/components/schemas/OrderRequest"
+          },
+          "externalBusinessTransactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "SubmitOrderResponse": {
+        "required": [
+          "orderID",
+          "orderRef"
+        ],
+        "type": "object",
+        "properties": {
+          "resultStatus": {
+            "$ref": "#/components/schemas/ResultStatus"
+          },
+          "orderID": {
+            "type": "string"
+          },
+          "orderRef": {
+            "type": "string"
+          },
+          "externalBusinessTransactionID": {
+            "type": "string"
+          },
+          "businessTransactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "SuspendOrderRequest": {
+        "type": "object",
+        "properties": {
+          "orderRef": {
+            "type": "string"
+          },
+          "orderID": {
+            "type": "string"
+          },
+          "externalBusinessTransactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "SuspendOrderResponse": {
+        "required": [
+          "message",
+          "orderID",
+          "orderRef"
+        ],
+        "type": "object",
+        "properties": {
+          "orderID": {
+            "type": "string",
+            "xml": {
+              "name": "OrderID"
+            }
+          },
+          "orderRef": {
+            "type": "string",
+            "xml": {
+              "name": "OrderRef"
+            }
+          },
+          "message": {
+            "type": "string"
+          },
+          "externalBusinessTransactionID": {
+            "type": "string",
+            "xml": {
+              "name": "ExternalBusinessTransactionID",
+              "attribute": true
+            }
+          },
+          "businessTransactionID": {
+            "type": "string",
+            "xml": {
+              "name": "BusinessTransactionID",
+              "attribute": true
+            }
+          }
+        },
+        "xml": {
+          "name": "SuspendOrderResponse"
+        }
+      },
+      "CancelOrderRequest": {
+        "type": "object",
+        "properties": {
+          "orderRef": {
+            "type": "string"
+          },
+          "orderID": {
+            "type": "string"
+          },
+          "rollback": {
+            "type": "boolean"
+          },
+          "externalBusinessTransactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "CancelOrderResponse": {
+        "type": "object",
+        "properties": {
+          "orderID": {
+            "type": "string"
+          },
+          "orderRef": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "externalBusinessTransactionID": {
+            "type": "string"
+          },
+          "businessTransactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "PerformBulkOrderActionRequest": {
+        "required": [
+          "action"
+        ],
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "default": "Can either be CANCEL, SUSPEND, RESUME or WITHDRAW",
+            "enum": [
+              "CANCEL",
+              "SUSPEND",
+              "RESUME",
+              "WITHDRAW"
+            ]
+          },
+          "orderRef": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "orderID": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "businessTransactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "PerformBulkOrderActionResponse": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "message": {
+            "type": "string"
+          },
+          "noOfOrders": {
+            "type": "integer"
+          },
+          "businessTransactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "AuditTrailCustomReq": {
+        "type": "object",
+        "properties": {
+          "planId": {
+            "type": "string"
+          },
+          "planItemId": {
+            "type": "string"
+          },
+          "orderLineNumber": {
+            "type": "string"
+          },
+          "auditMessage": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AuditTrailNew": {
+        "required": [
+          "orderId",
+          "orderRef"
+        ],
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string"
+          },
+          "orderRef": {
+            "type": "string"
+          },
+          "order": {
+            "$ref": "#/components/schemas/AuditTrailOrderReq"
+          },
+          "plan": {
+            "$ref": "#/components/schemas/AuditTrailPlanReq"
+          },
+          "planItem": {
+            "$ref": "#/components/schemas/AuditTrailPlanItemReq"
+          },
+          "orderLine": {
+            "$ref": "#/components/schemas/AuditTrailOrderLineReq"
+          },
+          "generic": {
+            "$ref": "#/components/schemas/AuditTrailCustomReq"
+          }
+        },
+        "xml": {
+          "name": "AuditTrail"
+        }
+      },
+      "AuditTrailOrderLineReq": {
+        "type": "object",
+        "properties": {
+          "orderLineNumber": {
+            "type": "string"
+          },
+          "auditMessage": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AuditTrailOrderReq": {
+        "required": [
+          "auditMessage"
+        ],
+        "type": "object",
+        "properties": {
+          "auditMessage": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "xml": {
+          "name": "order"
+        }
+      },
+      "AuditTrailPlanItemReq": {
+        "type": "object",
+        "properties": {
+          "planItemId": {
+            "type": "string"
+          },
+          "auditMessage": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AuditTrailPlanReq": {
+        "type": "object",
+        "properties": {
+          "planId": {
+            "type": "string"
+          },
+          "auditMessage": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AuditTrailRequest": {
+        "required": [
+          "auditTrails"
+        ],
+        "type": "object",
+        "properties": {
+          "auditTrails": {
+            "type": "array",
+            "xml": {
+              "name": "AuditTrailMessage"
+            },
+            "items": {
+              "$ref": "#/components/schemas/AuditTrailNew"
+            }
+          }
+        },
+        "xml": {
+          "name": "AuditTrailRequest"
+        }
+      },
+      "ActivateOrderRequest": {
+        "type": "object",
+        "properties": {
+          "orderRef": {
+            "type": "string"
+          },
+          "orderID": {
+            "type": "string"
+          },
+          "externalBusinessTransactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "ActivateOrderResponse": {
+        "required": [
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "orderID": {
+            "type": "string"
+          },
+          "orderRef": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "externalBusinessTransactionID": {
+            "type": "string"
+          },
+          "businessTransactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "FeasibilityReply": {
+        "required": [
+          "orderID",
+          "orderRef"
+        ],
+        "type": "object",
+        "properties": {
+          "orderID": {
+            "type": "string"
+          },
+          "orderRef": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "passed": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "array",
+            "xml": {
+              "namespace": "http://www.tibco.com/AFF/V4.0.0/applications/orchestrator/message"
+            },
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          },
+          "businessTransactionID": {
+            "type": "string",
+            "xml": {
+              "namespace": "http://www.tibco.com/AFF/V4.0.0/services/orchestrator/provider",
+              "attribute": true
+            }
+          }
+        },
+        "xml": {
+          "name": "FeasibilityReply"
+        }
+      },
+      "AmendOrderRequest": {
+        "required": [
+          "orderRequest"
+        ],
+        "type": "object",
+        "properties": {
+          "orderRequest": {
+            "$ref": "#/components/schemas/OrderRequest"
+          },
+          "externalBusinessTransactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "AmendOrderResponse": {
+        "required": [
+          "orderID",
+          "orderRef"
+        ],
+        "type": "object",
+        "properties": {
+          "orderRef": {
+            "type": "string"
+          },
+          "resultStatus": {
+            "$ref": "#/components/schemas/ResultStatus"
+          },
+          "orderID": {
+            "type": "string"
+          },
+          "externalBusinessTransactionID": {
+            "type": "string"
+          },
+          "businessTransactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "AuditTrailCustomResponse": {
+        "type": "object",
+        "properties": {
+          "planId": {
+            "type": "string"
+          },
+          "planItemId": {
+            "type": "string"
+          },
+          "orderLineNumber": {
+            "type": "string"
+          },
+          "auditMessage": {
+            "type": "string"
+          },
+          "messageType": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AuditTrailOrderAmendmentResponse": {
+        "required": [
+          "auditMessage",
+          "messageType"
+        ],
+        "type": "object",
+        "properties": {
+          "auditMessage": {
+            "type": "string"
+          },
+          "messageType": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AuditTrailOrderLineResponse": {
+        "type": "object",
+        "properties": {
+          "orderLineNumber": {
+            "type": "string"
+          },
+          "auditMessage": {
+            "type": "string"
+          },
+          "messageType": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AuditTrailOrderResponse": {
+        "required": [
+          "auditMessage",
+          "messageType"
+        ],
+        "type": "object",
+        "properties": {
+          "auditMessage": {
+            "type": "string"
+          },
+          "messageType": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "xml": {
+          "name": "order"
+        }
+      },
+      "AuditTrailPlanItemResponse": {
+        "type": "object",
+        "properties": {
+          "planItemId": {
+            "type": "string"
+          },
+          "auditMessage": {
+            "type": "string"
+          },
+          "messageType": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AuditTrailPlanResponse": {
+        "type": "object",
+        "properties": {
+          "planId": {
+            "type": "string"
+          },
+          "auditMessage": {
+            "type": "string"
+          },
+          "messageType": {
+            "type": "string"
+          },
+          "origin": {
+            "type": "string"
+          },
+          "dateCreated": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetAuditTrailResponse": {
+        "type": "object",
+        "properties": {
+          "orderRef": {
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string"
+          },
+          "order": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditTrailOrderResponse"
+            }
+          },
+          "plan": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditTrailPlanResponse"
+            }
+          },
+          "orderLine": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditTrailOrderLineResponse"
+            }
+          },
+          "planitem": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditTrailPlanItemResponse"
+            }
+          },
+          "generic": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditTrailCustomResponse"
+            }
+          },
+          "orderAmendment": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditTrailOrderAmendmentResponse"
+            }
+          }
+        }
+      },
+      "GetOrderExecutionPlanResponse": {
+        "required": [
+          "originator",
+          "planCreationDate",
+          "planID",
+          "status",
+          "statusChanged"
+        ],
+        "type": "object",
+        "properties": {
+          "planID": {
+            "type": "string",
+            "default": "Unique identifier for the plan."
+          },
+          "orderID": {
+            "type": "string",
+            "default": "Order Id that this plan is fulfilling."
+          },
+          "orderRef": {
+            "type": "string",
+            "default": "Order reference Id that this plan is fulfilling."
+          },
+          "originator": {
+            "type": "string",
+            "default": "Originator of the AOPD request that created this        plan."
+          },
+          "planCreationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string",
+            "default": "Current status of the plan."
+          },
+          "statusChanged": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "description": {
+            "type": "string",
+            "default": "Description for the plan."
+          },
+          "planStartDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "planStartMillis": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "isAmendment": {
+            "type": "boolean"
+          },
+          "planItems": {
+            "maxItems": 2147483647,
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlanItem"
+            }
+          },
+          "udfs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Udf"
+            }
+          }
+        },
+        "description": "Plan type"
+      },
+      "Amendments": {
+        "type": "object",
+        "properties": {
+          "orderAmendments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderAmendment"
+            }
+          }
+        }
+      },
+      "GetOrderDetailsResponse": {
+        "required": [
+          "orderResult"
+        ],
+        "type": "object",
+        "properties": {
+          "orderResult": {
+            "$ref": "#/components/schemas/OrderResult"
+          }
+        }
+      },
+      "Header": {
+        "required": [
+          "originator",
+          "planUniqueID",
+          "pointOfNoReturn",
+          "requiredOnDate",
+          "status",
+          "statusChanged",
+          "submittedDate",
+          "suspended"
+        ],
+        "type": "object",
+        "properties": {
+          "submittedDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "description": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "customerID": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string"
+          },
+          "subscriberID": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string"
+          },
+          "orderPriority": {
+            "maximum": 4,
+            "exclusiveMaximum": false,
+            "minimum": 0,
+            "exclusiveMinimum": false,
+            "type": "number"
+          },
+          "invoiceAddress": {
+            "$ref": "#/components/schemas/AddressType"
+          },
+          "deliveryAddress": {
+            "$ref": "#/components/schemas/AddressType"
+          },
+          "notes": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "slaID": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "udf": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderUdf"
+            }
+          },
+          "pointOfNoReturn": {
+            "type": "boolean"
+          },
+          "status": {
+            "maxLength": 22,
+            "minLength": 0,
+            "type": "string"
+          },
+          "statusChanged": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "suspended": {
+            "type": "boolean"
+          },
+          "originator": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string"
+          },
+          "planUniqueID": {
+            "type": "string"
+          },
+          "planStatus": {
+            "type": "string"
+          },
+          "planExpectedCompletionDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "warning": {
+            "type": "string"
+          },
+          "extension": {
+            "$ref": "#/components/schemas/ExtensionType"
+          },
+          "requiredByDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "requiredOnDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Line": {
+        "required": [
+          "action",
+          "lineNumber",
+          "productID",
+          "quantity",
+          "requiredByDate",
+          "requiredOnDate",
+          "status",
+          "statusChanged",
+          "uom"
+        ],
+        "type": "object",
+        "properties": {
+          "lineNumber": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string"
+          },
+          "subscriberID": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string"
+          },
+          "productID": {
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string"
+          },
+          "productVersion": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string"
+          },
+          "quantity": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "uom": {
+            "maxLength": 45,
+            "minLength": 0,
+            "type": "string"
+          },
+          "deliveryAddress": {
+            "$ref": "#/components/schemas/AddressType"
+          },
+          "action": {
+            "type": "string"
+          },
+          "actionMode": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string"
+          },
+          "linkID": {
+            "maxLength": 45,
+            "minLength": 0,
+            "type": "string"
+          },
+          "inventoryID": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "notes": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "slaID": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "udf": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderUdf"
+            }
+          },
+          "characteristics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderCharacteristic"
+            }
+          },
+          "customerItemID": {
+            "maxLength": 64,
+            "minLength": 0,
+            "type": "string"
+          },
+          "status": {
+            "maxLength": 32,
+            "minLength": 0,
+            "type": "string"
+          },
+          "statusChanged": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "extension": {
+            "$ref": "#/components/schemas/ExtensionType"
+          },
+          "requiredByDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "requiredOnDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OrderAmendment": {
+        "type": "object",
+        "properties": {
+          "creationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "orderRequest": {
+            "$ref": "#/components/schemas/OrderRequest"
+          }
+        }
+      },
+      "OrderResult": {
+        "required": [
+          "header"
+        ],
+        "type": "object",
+        "properties": {
+          "orderID": {
+            "type": "string"
+          },
+          "orderRef": {
+            "type": "string"
+          },
+          "header": {
+            "$ref": "#/components/schemas/Header"
+          },
+          "lines": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Line"
+            }
+          },
+          "orderResultRequest": {
+            "$ref": "#/components/schemas/OrderResultRequest"
+          },
+          "amendments": {
+            "$ref": "#/components/schemas/Amendments"
+          }
+        }
+      },
+      "OrderResultRequest": {
+        "required": [
+          "orderRequest"
+        ],
+        "type": "object",
+        "properties": {
+          "orderRequest": {
+            "$ref": "#/components/schemas/OrderRequest"
+          }
+        }
+      },
+      "GetOrderStatusResponse": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string"
+          },
+          "orderStatus": {
+            "type": "string"
+          }
+        }
+      },
+      "SCXMLPersistentState": {
+        "type": "object",
+        "properties": {
+          "orderID": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "customerKey": {
+            "type": "string"
+          },
+          "seqNo": {
+            "type": "string"
+          },
+          "preAmendmentExtractedScxml": {
+            "type": "string"
+          },
+          "retryCountMap": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "stateXML": {
+            "type": "string"
+          },
+          "sequencingEnabled": {
+            "type": "boolean"
+          },
+          "prePlanAmendment": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PendingOrderEvent": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string"
+          },
+          "eventId": {
+            "type": "string"
+          },
+          "creationTimeInEpoch": {
+            "type": "string"
+          }
+        }
+      },
+      "PendingOrderEventResponse": {
+        "type": "object",
+        "properties": {
+          "pendingOrderEvents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PendingOrderEvent"
+            }
+          }
+        }
+      },
+      "GetMessageResponse": {
+        "type": "object",
+        "properties": {
+          "planItemMessagesList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlanItemMessages"
+            }
+          },
+          "orderLevelMessagesList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderLevelMessages"
+            }
+          }
+        }
+      },
+      "OrderLevelMessages": {
+        "type": "object",
+        "properties": {
+          "messageType": {
+            "type": "string"
+          },
+          "messageList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Message"
+            }
+          }
+        }
+      },
+      "DeadOrderEvent": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string"
+          },
+          "eventId": {
+            "type": "string"
+          }
+        }
+      },
+      "DeadOrderEventResponse": {
+        "type": "object",
+        "properties": {
+          "deadOrderEvents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeadOrderEvent"
+            }
+          }
+        }
+      },
+      "Link": {
+        "type": "object",
+        "properties": {
+          "href": {
+            "type": "string"
+          },
+          "templated": {
+            "type": "boolean"
+          }
+        }
+      },
+      "WithdrawOrderRequest": {
+        "type": "object",
+        "properties": {
+          "orderRef": {
+            "type": "string"
+          },
+          "orderID": {
+            "type": "string"
+          },
+          "externalBusinessTransactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "WithdrawOrderResponse": {
+        "required": [
+          "businessTransactionID",
+          "externalBusinessTransactionID",
+          "message",
+          "orderID",
+          "orderRef"
+        ],
+        "type": "object",
+        "properties": {
+          "orderID": {
+            "type": "string"
+          },
+          "orderRef": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "externalBusinessTransactionID": {
+            "type": "string"
+          },
+          "businessTransactionID": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateLogLevelRequest": {
+        "type": "object",
+        "properties": {
+          "configuredLevel": {
+            "type": "string",
+            "description": "Log level to configure"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "OAuth Password": {
+        "type": "oauth2",
+        "flows": {
+          "password": {
+            "authorizationUrl": "http://localhost:9091/oauth/token",
+            "tokenUrl": "http://localhost:9091/oauth/token",
+            "scopes": {
+              "read": "read all",
+              "write": "write all"
+            }
+          }
+        }
+      }
+    }
+  }
+}

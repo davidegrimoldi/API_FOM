@@ -1,0 +1,867 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Data Service",
+        "description": "Data Service exposes APIs for process components to access or update the UDF data during order fulfillment.",
+        "contact": {
+            "name": "TIBCO SUPPORT",
+            "url": "https://support.tibco.com"
+        },
+        "license": {
+            "name": "Tibco-URL",
+            "url": "https://www.tibco.com"
+        },
+        "version": "6.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:9095",
+            "description": "Generated server url"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Data Service"
+        },
+        {
+            "name": "Actuator",
+            "description": "Monitor and interact",
+            "externalDocs": {
+                "description": "Spring Boot Actuator Web API Documentation",
+                "url": "https://docs.spring.io/spring-boot/docs/current/actuator-api/html/"
+            }
+        }
+    ],
+    "paths": {
+        "/v1/planitems": {
+            "post": {
+                "tags": [
+                    "Data Service"
+                ],
+                "summary": "Set Plan Item Request",
+                "description": "Set Plan Item API can be used to add a new UDF or update the value of an existing UDF of the plan items in a plan",
+                "operationId": "setPlanItemRequest",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SetPlanItemRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request has been Accepted for Processing"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized Request"
+                    },
+                    "403": {
+                        "description": "Plan is already completed"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth Password": []
+                    }
+                ]
+            }
+        },
+        "/v1/planitems/get": {
+            "post": {
+                "tags": [
+                    "Data Service"
+                ],
+                "summary": "Get Plan Items Details.",
+                "description": "Get Plan Items API can be used to retrieve the data of one or many plan items in the plan corresponding to an order",
+                "operationId": "getPlanItemsRequest",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/GetPlanItemsRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Get plan-item details Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPlanItemsReply"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPlanItemsReply"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPlanItemsReply"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPlanItemsReply"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPlanItemsReply"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth Password": []
+                    }
+                ]
+            }
+        },
+        "/v1/plan": {
+            "post": {
+                "tags": [
+                    "Data Service"
+                ],
+                "summary": "Set Plan Request",
+                "description": "Set Plan API can be used to add a new UDF or update an existing UDF of plan or any of the containing plan items",
+                "operationId": "setPlanRequest",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SetPlanRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Request has been Accepted for Processing"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized Request"
+                    },
+                    "403": {
+                        "description": "Plan is already completed"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth Password": []
+                    }
+                ]
+            }
+        },
+        "/v1/plan/get": {
+            "post": {
+                "tags": [
+                    "Data Service"
+                ],
+                "summary": "Get Plan Details",
+                "description": "Get Plan API can be used to retrieve the plan corresponding to an order",
+                "operationId": "getPlanRequest",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/GetPlanRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Get plan details Successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPlanReply"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPlanReply"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized Request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPlanReply"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPlanReply"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPlanReply"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth Password": []
+                    }
+                ]
+            }
+        },
+        "/management/loggers/{name}": {
+            "get": {
+                "tags": [
+                    "Actuator"
+                ],
+                "summary": "Actuator web endpoint 'loggers-name'",
+                "operationId": "loggers-name_2",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth Password": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Actuator"
+                ],
+                "summary": "Actuator web endpoint 'loggers-name'",
+                "operationId": "loggers-name",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/UpdateLogLevelRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth Password": []
+                    }
+                ]
+            }
+        },
+        "/management": {
+            "get": {
+                "tags": [
+                    "Actuator"
+                ],
+                "summary": "Actuator root web endpoint",
+                "operationId": "links",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "object",
+                                        "additionalProperties": {
+                                            "$ref": "#/components/schemas/Link"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/management/loggers": {
+            "get": {
+                "tags": [
+                    "Actuator"
+                ],
+                "summary": "Actuator web endpoint 'loggers'",
+                "operationId": "loggers",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "204": {
+                        "description": "No Content"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth Password": []
+                    }
+                ]
+            }
+        },
+        "/management/health": {
+            "get": {
+                "tags": [
+                    "Actuator"
+                ],
+                "summary": "Actuator web endpoint 'health'",
+                "operationId": "health",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/management/health/{name}": {
+            "get": {
+                "tags": [
+                    "Actuator"
+                ],
+                "summary": "Actuator web endpoint 'health-path'",
+                "operationId": "health-path",
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "enum": [
+                                "readiness",
+                                "liveness"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "PlanItemSetType": {
+                "required": [
+                    "planItemID"
+                ],
+                "type": "object",
+                "properties": {
+                    "planItemID": {
+                        "type": "string"
+                    },
+                    "planItemName": {
+                        "type": "string"
+                    },
+                    "udf": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UdfSetType"
+                        }
+                    }
+                }
+            },
+            "SetPlanItemRequest": {
+                "required": [
+                    "planItem",
+                    "replace"
+                ],
+                "type": "object",
+                "properties": {
+                    "orderID": {
+                        "type": "string",
+                        "description": "Any of orderId, orderRef, planId is required"
+                    },
+                    "orderRef": {
+                        "type": "string",
+                        "description": "Any of orderId, orderRef, planId is required"
+                    },
+                    "planID": {
+                        "type": "string",
+                        "description": "Any of orderId, orderRef, planId is required"
+                    },
+                    "planItem": {
+                        "$ref": "#/components/schemas/PlanItemSetType"
+                    },
+                    "replace": {
+                        "type": "boolean",
+                        "description": "If true, UDF in request will replace the udf in plan. If false, udf will merge with udf in plan"
+                    },
+                    "businessTransactionID": {
+                        "type": "string"
+                    },
+                    "correlationID": {
+                        "type": "string"
+                    }
+                }
+            },
+            "UdfSetType": {
+                "type": "object",
+                "properties": {
+                    "evaluationPriority": {
+                        "type": "string"
+                    },
+                    "type": {
+                        "type": "string"
+                    },
+                    "flavor": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "string"
+                    }
+                }
+            },
+            "GetPlanItemsRequest": {
+                "required": [
+                    "idsOnly",
+                    "planItemIdList"
+                ],
+                "type": "object",
+                "properties": {
+                    "orderID": {
+                        "type": "string",
+                        "description": "Any of orderId, orderRef, planId is required"
+                    },
+                    "orderRef": {
+                        "type": "string",
+                        "description": "Any of orderId, orderRef, planId is required"
+                    },
+                    "planID": {
+                        "type": "string",
+                        "description": "Any of orderId, orderRef, planId is required"
+                    },
+                    "idsOnly": {
+                        "type": "boolean",
+                        "description": "If true, returns id of all elements. Otherwise returns all plan data"
+                    },
+                    "planItemIdList": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "businessTransactionID": {
+                        "type": "string"
+                    },
+                    "correlationID": {
+                        "type": "string"
+                    },
+                    "includeRelatedPlanItems": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "GetPlanItemsReply": {
+                "type": "object",
+                "properties": {
+                    "planItem": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PlanItemGetType"
+                        }
+                    },
+                    "businessTransactionID": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PlanItemGetType": {
+                "required": [
+                    "planItemID"
+                ],
+                "type": "object",
+                "properties": {
+                    "planItemID": {
+                        "type": "string",
+                        "default": "Unique identifier for the plan item within the plan."
+                    },
+                    "planItemName": {
+                        "type": "string",
+                        "default": "Identifier for the plan item name(Product Description) within the plan."
+                    },
+                    "parentID": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "default": "Plan Item Ids which are dependent on this plan item"
+                        },
+                        "default": "Plan Item Ids which are dependent on this plan item"
+                    },
+                    "childID": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "default": "Plan Item Ids on which this plan item depends"
+                        },
+                        "default": "Plan Item Ids on which this plan item depends"
+                    },
+                    "siblingID": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "default": "Plan Item Ids of sibling products for this plan item"
+                        },
+                        "default": "Plan Item Ids of sibling products for this plan item"
+                    },
+                    "dependentID": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "default": "Plan Item Ids of dependent products for this plan item"
+                        },
+                        "default": "Plan Item Ids of dependent products for this plan item"
+                    },
+                    "udf": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UdfGetType"
+                        }
+                    }
+                }
+            },
+            "UdfGetType": {
+                "required": [
+                    "name"
+                ],
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "flavor": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "string"
+                    },
+                    "originalValue": {
+                        "type": "string"
+                    },
+                    "evaluationPriority": {
+                        "type": "string"
+                    },
+                    "lastModified": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                }
+            },
+            "PlanSetType": {
+                "type": "object",
+                "properties": {
+                    "planID": {
+                        "type": "string",
+                        "description": "Any of orderId, orderRef, planId is required"
+                    },
+                    "orderID": {
+                        "type": "string",
+                        "description": "Any of orderId, orderRef, planId is required"
+                    },
+                    "orderRef": {
+                        "type": "string",
+                        "description": "Any of orderId, orderRef, planId is required"
+                    },
+                    "udf": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UdfSetType"
+                        }
+                    },
+                    "planItem": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PlanItemSetType"
+                        }
+                    }
+                }
+            },
+            "SetPlanRequest": {
+                "required": [
+                    "plan",
+                    "replace"
+                ],
+                "type": "object",
+                "properties": {
+                    "plan": {
+                        "$ref": "#/components/schemas/PlanSetType"
+                    },
+                    "replace": {
+                        "type": "boolean",
+                        "description": "If true, UDF in request will replace the udf in plan. If false, udf will merge with udf in plan"
+                    },
+                    "businessTransactionID": {
+                        "type": "string"
+                    }
+                }
+            },
+            "GetPlanRequest": {
+                "required": [
+                    "idsOnly",
+                    "includeItems"
+                ],
+                "type": "object",
+                "properties": {
+                    "orderID": {
+                        "type": "string",
+                        "description": "Any of orderId, orderRef, planId is required"
+                    },
+                    "orderRef": {
+                        "type": "string",
+                        "description": "Any of orderId, orderRef, planId is required"
+                    },
+                    "planID": {
+                        "type": "string",
+                        "description": "Any of orderId, orderRef, planId is required"
+                    },
+                    "businessTransactionID": {
+                        "type": "string"
+                    },
+                    "correlationID": {
+                        "type": "string"
+                    },
+                    "idsOnly": {
+                        "type": "boolean",
+                        "description": "If true, returns id of all elements. Otherwise returns all plan data"
+                    },
+                    "includeItems": {
+                        "type": "boolean",
+                        "description": "If true returns all plan items with the plan. If false, only the plan details are returned"
+                    },
+                    "matchingUdfNameAllPi": {
+                        "type": "string",
+                        "description": "ALL_PI_SINGLE_UDF_NAME"
+                    },
+                    "piMatchingUdfNameVal": {
+                        "type": "string",
+                        "description": "MATCHING_PI_UDF_NAME_VAL"
+                    },
+                    "matchingUdfNameAllPiIgnoreEmpty": {
+                        "type": "boolean",
+                        "description": "ALL_PI_SINGLE_UDF_NAME_IGNORE_EMPTY_PI"
+                    }
+                }
+            },
+            "GetPlanReply": {
+                "type": "object",
+                "properties": {
+                    "plan": {
+                        "$ref": "#/components/schemas/PlanGetType"
+                    },
+                    "businessTransactionID": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PlanGetType": {
+                "required": [
+                    "planID"
+                ],
+                "type": "object",
+                "properties": {
+                    "planID": {
+                        "type": "string"
+                    },
+                    "orderID": {
+                        "type": "string"
+                    },
+                    "orderRef": {
+                        "type": "string"
+                    },
+                    "udf": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/UdfGetType"
+                        }
+                    },
+                    "planItem": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PlanItemGetType"
+                        }
+                    },
+                    "status": {
+                        "type": "string"
+                    },
+                    "planDescription": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Link": {
+                "type": "object",
+                "properties": {
+                    "href": {
+                        "type": "string"
+                    },
+                    "templated": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "UpdateLogLevelRequest": {
+                "type": "object",
+                "properties": {
+                    "configuredLevel": {
+                        "type": "string",
+                        "description": "Log level to configure"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "OAuth Password": {
+                "type": "oauth2",
+                "flows": {
+                    "password": {
+                        "authorizationUrl": "http://localhost:9091/oauth/token",
+                        "tokenUrl": "http://localhost:9091/oauth/token",
+                        "scopes": {
+                            "read": "read all",
+                            "write": "write all"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
